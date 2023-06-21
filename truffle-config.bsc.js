@@ -50,7 +50,7 @@ module.exports = {
   compilers: {
     solc: {
       // dikkat et buraya olmazsa değiştir aynı yap
-      version: ">=0.5.0 < 0.9.0"
+      version: "0.8.8"
     }
   },
   db: {
