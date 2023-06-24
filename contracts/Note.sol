@@ -1,42 +1,33 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity >=0.4.22 <0.9.0;
 
 contract Note {
+    uint256 public noteCount = 0;
+
     struct Not {
         uint256 id;
-        string baslik;
-        string icerik;
+        string title;
+        string description;
     }
 
-    mapping(uint256 => Not) public notlar;
-    uint256 public notSayisi;
+    mapping(uint256 => Not) public notes;
 
-    event NotEklendi(uint256 notId, string baslik, string icerik);
-    event NotGuncellendi(uint256 notId, string baslik, string icerik);
-    event NotSilindi(uint256 notId);
+    event NoteCreated(uint256 id, string title, string description);
+    event NoteDeleted(uint256 id);
+    
 
-    function notEkle(string memory _baslik, string memory _icerik) public {
-        notSayisi++;
-        notlar[notSayisi] = Not(notSayisi, _baslik, _icerik);
-        emit NotEklendi(notSayisi, _baslik, _icerik);
+    function createNote(string memory _title, string memory _description)
+        public
+    {
+        notes[noteCount] = Not(noteCount, _title, _description);
+        emit NoteCreated(noteCount, _title, _description);
+        noteCount++;
     }
 
-    function notGuncelle(uint256 _notId, string memory _baslik, string memory _icerik) public {
-        require(_notId <= notSayisi, "Gecersiz not IDsi.");
-        notlar[_notId].baslik = _baslik;
-        notlar[_notId].icerik = _icerik;
-        emit NotGuncellendi(_notId, _baslik, _icerik);
-        
+    function deleteNote(uint256 _id) public {
+        delete notes[_id];
+        emit NoteDeleted(_id);
+        noteCount--;
     }
-
-    function notSil(uint256 _notId) public {
-        require(_notId <= notSayisi, "Gecersiz not IDsi.");
-        delete notlar[_notId];
-        emit NotSilindi(_notId);
-    }
-
-    function notGetir(uint256 _notId) public view returns (string memory, string memory) {
-        require(_notId <= notSayisi, "Gecersiz not IDsi.");
-        return (notlar[_notId].baslik, notlar[_notId].icerik);
-    }
+    
 }
